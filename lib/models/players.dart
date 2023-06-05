@@ -13,7 +13,7 @@ class Players {
     required this.team,
   });
 
-  factory Players.toJson(Map<String, dynamic> json) {
+  factory Players.playerObj(Map<String, dynamic> json) {
     return Players(
         firstName: json['first_name'],
         lastName: json['last_name'],
