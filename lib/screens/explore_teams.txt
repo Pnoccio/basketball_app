@@ -1,0 +1,123 @@
+import 'package:basketball_app/utils/mock_data.dart';
+import 'package:flutter/material.dart';
+import '../components/teams.dart';
+import '../utils/mock_data.dart';
+import '../utils/app_styles.dart';
+
+class ExploreTeamScreen extends StatelessWidget {
+  final teams = Mockdata.getMockedTeams();
+
+  ExploreTeamScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // adding todayarecipelistview futureBuilder
+    return const Center(
+      child: Text("holla"),
+    );
+  }
+}
+
+
+
+// to be used later
+
+    body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Text(
+                "My Team List",
+                style: Styles.headLineStyle3.copyWith(color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: teams.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.all(20),
+                    height: 150,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/${teams[index].imgName}.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 120,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(20),
+                                //   bottomRight: Radius.circular(20),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.1),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                ClipOval(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      // color: Colors.blueGrey,
+                                      borderRadius: BorderRadius.circular(60),
+                                    ),
+                                    child: Image(
+                                      image: AssetImage(
+                                        'assets/images/${teams[index].iconName}.png',
+                                      ),
+                                      color: Colors.white,
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  teams[index].name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
