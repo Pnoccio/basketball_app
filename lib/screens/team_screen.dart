@@ -1,14 +1,8 @@
-// import 'dart:convert';
-
-import 'dart:convert';
-
-// import 'package:basketball_app/components/teams.dart';
-// import 'package:basketball_app/utils/app_styles.dart';
-// import 'package:basketball_app/utils/app_styles.dart';
 import 'package:basketball_app/components/teams.dart';
 import 'package:basketball_app/utils/app_data.dart';
+import 'package:basketball_app/utils/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 // import 'package:http/http.dart' as http;
 
 class TeamScreen extends StatefulWidget {
@@ -29,15 +23,56 @@ class _TeamScreenState extends State<TeamScreen> {
         teamScreen = data.map((bkteam) => Teams.teamObj(bkteam)).toList();
       });
     });
-    @override
-    void initState() {
-      super.initState();
-      getTeams();
-    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTeams();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: FutureBuilder(
+          future: futureTeams,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: teamScreen.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Styles.bgColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          teamScreen[index].fullName,
+                          style: Styles.headLineStyle3.copyWith(
+                            color: Colors.black87,
+                          ),
+                        ),
+                        subtitle: Text(
+                          teamScreen[index].abbreviation,
+                          style: Styles.headLineStyle4
+                              .copyWith(color: Colors.black45),
+                        ),
+                        trailing: Text(
+                          teamScreen[index].division,
+                          style: Styles.headLineStyle4,
+                        ),
+                      ),
+                    );
+                  });
+            } else {
+              return const Center(
+                child: Text("Data is not found"),
+              );
+            }
+          }),
+    );
   }
 }

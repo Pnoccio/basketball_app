@@ -18,6 +18,6 @@ class Players {
         firstName: json['first_name'],
         lastName: json['last_name'],
         position: json['position'],
-        team: Teams.fromJson(json['team']));
+        team: Teams.teamObj(json['team']));
   }
 }
