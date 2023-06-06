@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:basketball_app/components/games.dart';
 import 'package:basketball_app/utils/app_styles.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class GamesScreen extends StatefulWidget {
   const GamesScreen({Key? key}) : super(key: key);
@@ -92,14 +94,14 @@ class _GamesScreen extends State<GamesScreen> {
                 children: [
                   Text(
                     'Game Status',
-                    style: Styles.headLineStyle4.copyWith(color: Colors.black),
+                    style: Styles.headLineStyle3.copyWith(color: Colors.black),
                   ),
                   verticalSpace,
-                  // const DottedLine(
-                  //   dashLength: 10,
-                  //   dahsColor: Colors.black,
-                  //   lineThickness: 1.0,
-                  // ),
+                  const DottedLine(
+                    dashLength: 15,
+                    dashColor: Colors.black,
+                    lineThickness: 2.0,
+                  ),
                   verticalSpace,
                   Expanded(
                     child: Center(
@@ -126,7 +128,6 @@ class _GamesScreen extends State<GamesScreen> {
           'status : ${game.status}',
           style: Styles.headLineStyle3.copyWith(color: Colors.black),
         ),
-        verticalSpace,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -143,41 +144,58 @@ class _GamesScreen extends State<GamesScreen> {
       ],
     );
   }
-}
 
-Widget GameCard(Games games) {
-  return Container(
-    margin: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
-    padding: const EdgeInsets.all(5),
-    constraints: const BoxConstraints(
-      maxWidth: 400,
-      maxHeight: 200,
-    ),
-    decoration: BoxDecoration(
-      color: Styles.bgColor,
-      borderRadius: BorderRadius.circular(30),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget GameCard(Games games) {
+    return GestureDetector(
+      onTap: () {
+        changeGameStats(games);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
+        padding: const EdgeInsets.all(5),
+        constraints: const BoxConstraints(
+          maxWidth: 400,
+          maxHeight: 200,
+        ),
+        decoration: BoxDecoration(
+          color: Styles.bgColor,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              games.homeTeam.fullName,
-              style: Styles.headLineStyle3.copyWith(color: Colors.black),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  games.homeTeam.name,
+                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
+                ),
+                Text(
+                  "VS",
+                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
+                ),
+                Text(
+                  games.visitorTeam.name,
+                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
+                ),
+              ],
             ),
-            Text(
-              "VS",
-              style: Styles.headLineStyle3.copyWith(color: Colors.black),
-            ),
-            Text(
-              games.visitorTeam.fullName,
-              style: Styles.headLineStyle3.copyWith(color: Colors.black),
-            ),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Time",
+                  style: Styles.headLineStyle4.copyWith(color: Colors.black),
+                ),
+              ],
+            )
           ],
-        )
-      ],
-    ),
-  );
+        ),
+      ),
+    );
+  }
 }
+// void changeGameStats(Games games) {}
