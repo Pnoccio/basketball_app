@@ -13,96 +13,168 @@ class GamesScreen extends StatefulWidget {
 }
 
 class _GamesScreen extends State<GamesScreen> {
-  List gameList = [];
+  List<Games> gameList = [];
+  Widget? stats;
+  final verticalSpace = const SizedBox(
+    height: 5.0,
+  );
+  final horizontalSpace = const SizedBox(
+    width: 2.0,
+  );
   void getGames() {
     DefaultAssetBundle.of(context)
         .loadString('assets/json/games.json')
         .then((value) {
-      final data = jsonDecode(value);
+      final List data = jsonDecode(value)['data'];
       setState(() {
-        gameList = data['data'];
+        gameList = data.map((game) => Games.gamesObj(game)).toList();
       });
     });
   }
 
-  // @override
-  // void initState({
-  //   required super.initState();
-  //   getGames();
-  // })
+  void changeGameStats(game) {
+    setState(() {
+      stats = gameStats(game);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getGames();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Styles.bgColor,
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Styles.blueColor,
-            borderRadius: BorderRadius.circular(20),
+      // backgroundColor: Styles.bgColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: gameList.length,
+              itemBuilder: (context, index) {
+                return GameCard(
+                  Games(
+                    gameId: gameList[index].gameId,
+                    gameDate: gameList[index].gameDate,
+                    homeTeamScore: gameList[index].homeTeamScore,
+                    visitorTeamScore: gameList[index].visitorTeamScore,
+                    period: gameList[index].period,
+                    status: gameList[index].status,
+                    homeTeam: gameList[index].homeTeam,
+                    visitorTeam: gameList[index].visitorTeam,
+                    season: gameList[index].season,
+                  ),
+                );
+              },
+            ),
           ),
-          padding: const EdgeInsets.all(15),
-          margin: const EdgeInsets.all(10),
-          width: 350,
-          height: 350,
-          child: Center(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: gameList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return miniGameCard(
-                        Games(
-                          gameId: gameList[index]['id'],
-                          gameDate: gameList[index]['date'],
-                          homeTeamScore: gameList[index]['home_team_score'],
-                          visitorTeamScore: gameList[index]
-                              ['visitor_team_score'],
-                          period: gameList[index]['period'],
-                          status: gameList[index]['status'],
-                          homeTeamAbbreviation: gameList[index]['home_team']
-                              ['abbrevaition'],
-                          visitorTeamAbbreviation: gameList[index]
-                              ['visitor_team']['abbreviation'],
-                        ),
-                      );
-                    }),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(5),
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width,
+                minHeight: 200.0,
               ),
-            ],
-          )),
-        ),
+              decoration: BoxDecoration(
+                color: Styles.bgColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Game Status',
+                    style: Styles.headLineStyle4.copyWith(color: Colors.black),
+                  ),
+                  verticalSpace,
+                  // const DottedLine(
+                  //   dashLength: 10,
+                  //   dahsColor: Colors.black,
+                  //   lineThickness: 1.0,
+                  // ),
+                  verticalSpace,
+                  Expanded(
+                    child: Center(
+                      child: stats,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget? gameStats(Games game) {
+    return Column(
+      children: [
+        Text(
+          'Year : ${game.season.toString()}',
+          style: Styles.headLineStyle3.copyWith(color: Colors.black),
+        ),
+        Text(
+          'status : ${game.status}',
+          style: Styles.headLineStyle3.copyWith(color: Colors.black),
+        ),
+        verticalSpace,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(game.homeTeamScore.toString()),
+            Text(
+              'score',
+              style: Styles.headLineStyle4.copyWith(color: Colors.black),
+            ),
+            Text(
+              game.visitorTeamScore.toString(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
 
-Widget miniGameCard(Games games) {
+Widget GameCard(Games games) {
   return Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.black),
+    margin: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
+    padding: const EdgeInsets.all(5),
+    constraints: const BoxConstraints(
+      maxWidth: 400,
+      maxHeight: 200,
     ),
-    padding: const EdgeInsets.all(20),
-    margin: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Styles.bgColor,
+      borderRadius: BorderRadius.circular(30),
+    ),
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              '${games.homeTeamAbbreviation}',
-              style: Styles.headLineStyle3.copyWith(color: Colors.white),
+              games.homeTeam.fullName,
+              style: Styles.headLineStyle3.copyWith(color: Colors.black),
             ),
             Text(
               "VS",
               style: Styles.headLineStyle3.copyWith(color: Colors.black),
             ),
             Text(
-              '${games.visitorTeamAbbreviation}',
+              games.visitorTeam.fullName,
               style: Styles.headLineStyle3.copyWith(color: Colors.black),
-            )
+            ),
           ],
         )
       ],

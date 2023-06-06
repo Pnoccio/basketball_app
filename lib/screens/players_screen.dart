@@ -13,14 +13,14 @@ class PlayersScreen extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _PlayerScreenState createState() => _PlayerScreenState();
+  PlayerScreenState createState() => PlayerScreenState();
 }
 
-class _PlayerScreenState extends State<PlayersScreen> {
+class PlayerScreenState extends State<PlayersScreen> {
   List<Players> playerList = [];
   late Future<List> futurePlayers;
 
-  void getPlayers() async {
+  void getPlayers() {
     futurePlayers = AppData.getPlayers();
     setState(() {
       futurePlayers.then((data) {
