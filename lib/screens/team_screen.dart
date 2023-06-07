@@ -41,6 +41,8 @@ class _TeamScreenState extends State<TeamScreen> {
               return ListView.builder(
                   itemCount: teamScreen.length,
                   itemBuilder: (context, index) {
+                    String teamImages =
+                        'assets/team_logos/team_photo_${index + 1}.png';
                     return Container(
                       margin: const EdgeInsets.all(10.0),
                       padding: const EdgeInsets.all(10),
@@ -49,6 +51,11 @@ class _TeamScreenState extends State<TeamScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ListTile(
+                        leading: Image.asset(
+                          teamImages,
+                          height: 50,
+                          width: 50,
+                        ),
                         title: Text(
                           teamScreen[index].fullName,
                           style: Styles.headLineStyle3.copyWith(
