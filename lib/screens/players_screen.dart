@@ -47,11 +47,11 @@ class PlayerScreenState extends State<PlayersScreen> {
                 itemCount: playerList.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Styles.bgColor,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(7),
                     ),
                     child: ListTile(
                       title: Text(
