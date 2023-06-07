@@ -1,201 +1,122 @@
 import 'dart:convert';
-
 import 'package:basketball_app/components/games.dart';
 import 'package:basketball_app/utils/app_styles.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class GamesScreen extends StatefulWidget {
   const GamesScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _GamesScreen createState() => _GamesScreen();
+  _GamesScreenState createState() => _GamesScreenState();
 }
 
-class _GamesScreen extends State<GamesScreen> {
+class _GamesScreenState extends State<GamesScreen> {
   List<Games> gameList = [];
-  Widget? stats;
-  final verticalSpace = const SizedBox(
-    height: 5.0,
-  );
-  final horizontalSpace = const SizedBox(
-    width: 2.0,
-  );
-  void getGames() {
-    DefaultAssetBundle.of(context)
-        .loadString('assets/json/games.json')
-        .then((value) {
-      final List data = jsonDecode(value)['data'];
-      setState(() {
-        gameList = data.map((game) => Games.gamesObj(game)).toList();
-      });
-    });
-  }
+  late Future<List> futureGames;
 
-  void changeGameStats(game) {
-    setState(() {
-      stats = gameStats(game);
-    });
+  Future<List> getGames() async {
+    String jsonData = await DefaultAssetBundle.of(context)
+        .loadString('assets/json/games.json');
+    final List data = jsonDecode(jsonData)['data'];
+    return data.map((game) => Games.gamesObj(game)).toList();
   }
 
   @override
   void initState() {
     super.initState();
-    getGames();
+    futureGames = getGames();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Styles.bgColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: gameList.length,
-              itemBuilder: (context, index) {
-                return GameCard(
-                  Games(
-                    gameId: gameList[index].gameId,
-                    gameDate: gameList[index].gameDate,
-                    homeTeamScore: gameList[index].homeTeamScore,
-                    visitorTeamScore: gameList[index].visitorTeamScore,
-                    period: gameList[index].period,
-                    status: gameList[index].status,
-                    homeTeam: gameList[index].homeTeam,
-                    visitorTeam: gameList[index].visitorTeam,
-                    season: gameList[index].season,
-                  ),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(5),
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width,
-                minHeight: 200.0,
-              ),
-              decoration: BoxDecoration(
-                color: Styles.bgColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Game Status',
-                    style: Styles.headLineStyle3.copyWith(color: Colors.black),
-                  ),
-                  verticalSpace,
-                  const DottedLine(
-                    dashLength: 15,
-                    dashColor: Colors.black,
-                    lineThickness: 2.0,
-                  ),
-                  verticalSpace,
-                  Expanded(
-                    child: Center(
-                      child: stats,
+      body: Center(
+        child: FutureBuilder(
+          future: futureGames,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              gameList = snapshot.data as List<Games>;
+              return ListView.builder(
+                itemCount: gameList.length,
+                itemBuilder: (context, index) {
+                  final bkgame = gameList[index];
+                  return Container(
+                    margin: EdgeInsets.all(2),
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Styles.bgColor,
+                      borderRadius: BorderRadius.circular(7),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget? gameStats(Games game) {
-    return Column(
-      children: [
-        Text(
-          'Year : ${game.season.toString()}',
-          style: Styles.headLineStyle3.copyWith(color: Colors.black),
-        ),
-        Text(
-          'status : ${game.status}',
-          style: Styles.headLineStyle3.copyWith(color: Colors.black),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(game.homeTeamScore.toString()),
-            Text(
-              'score',
-              style: Styles.headLineStyle4.copyWith(color: Colors.black),
-            ),
-            Text(
-              game.visitorTeamScore.toString(),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget GameCard(Games games) {
-    return GestureDetector(
-      onTap: () {
-        changeGameStats(games);
-      },
-      child: Container(
-        margin: const EdgeInsets.only(right: 5.0, left: 5.0, top: 10.0),
-        padding: const EdgeInsets.all(5),
-        constraints: const BoxConstraints(
-          maxWidth: 400,
-          maxHeight: 200,
-        ),
-        decoration: BoxDecoration(
-          color: Styles.bgColor,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  games.homeTeam.name,
-                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
-                ),
-                Text(
-                  "VS",
-                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
-                ),
-                Text(
-                  games.visitorTeam.name,
-                  style: Styles.headLineStyle2.copyWith(color: Colors.black),
-                ),
-              ],
-            ),
-            const Gap(20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Time",
-                  style: Styles.headLineStyle4.copyWith(color: Colors.black),
-                ),
-              ],
-            )
-          ],
+                    child: ListTile(
+                      leading: Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            bkgame.status,
+                            style: Styles.headLineStyle4
+                                .copyWith(color: Colors.black),
+                          ),
+                          const SizedBox(
+                            height: 1,
+                          ),
+                          Text(
+                            bkgame.gameDate.substring(0, 10),
+                            style: Styles.headLineStyle4
+                                .copyWith(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      title: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Text(
+                                  bkgame.homeTeam.fullName,
+                                  style: Styles.headLineStyle3
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  bkgame.visitorTeam.fullName,
+                                  style: Styles.headLineStyle3
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text('${bkgame.homeTeamScore}'),
+                          const SizedBox(
+                            height: 1,
+                          ),
+                          Text('${bkgame.visitorTeamScore}'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );
   }
 }
-// void changeGameStats(Games games) {}
