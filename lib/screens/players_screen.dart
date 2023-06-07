@@ -46,8 +46,8 @@ class PlayerScreenState extends State<PlayersScreen> {
               return ListView.builder(
                 itemCount: playerList.length,
                 itemBuilder: (context, index) {
-                  // String playersImages =
-                  //     "assets/players/player_${index + 1}.png";
+                  String playersImages =
+                      "assets/players/player_${index + 1}.png";
                   return Container(
                     margin: const EdgeInsets.all(2),
                     padding: const EdgeInsets.all(2),
@@ -56,11 +56,11 @@ class PlayerScreenState extends State<PlayersScreen> {
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: ListTile(
-                      // leading: Image.asset(
-                      //   playersImages,
-                      //   height: 50,
-                      //   width: 50,
-                      // ),
+                      leading: Image.asset(
+                        playersImages,
+                        height: 50,
+                        width: 50,
+                      ),
                       title: Text(
                         '${playerList[index].firstName} ${playerList[index].lastName}',
                         style:
