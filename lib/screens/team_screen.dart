@@ -44,15 +44,15 @@ class _TeamScreenState extends State<TeamScreen> {
                     String teamImages =
                         'assets/team_logos/team_photo_${index + 1}.png';
                     return Container(
-                      margin: const EdgeInsets.all(10.0),
-                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         color: Styles.bgColor,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(7),
                       ),
                       child: ListTile(
                         leading: Container(
-                          margin: const EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.all(0),
                           padding: const EdgeInsets.all(10),
                           child: ClipOval(
                             child: Image.asset(
