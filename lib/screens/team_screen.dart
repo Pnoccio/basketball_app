@@ -51,10 +51,16 @@ class _TeamScreenState extends State<TeamScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ListTile(
-                        leading: Image.asset(
-                          teamImages,
-                          height: 50,
-                          width: 50,
+                        leading: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.all(10),
+                          child: ClipOval(
+                            child: Image.asset(
+                              teamImages,
+                              height: 50,
+                              width: 50,
+                            ),
+                          ),
                         ),
                         title: Text(
                           teamScreen[index].fullName,
