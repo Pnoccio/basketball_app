@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
 
 class AppData {
   static Future<List<dynamic>> getPlayers() async {
