@@ -7,6 +7,7 @@ class TeamScreen extends StatefulWidget {
   const TeamScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _TeamScreenState createState() => _TeamScreenState();
 }
 
@@ -17,8 +18,8 @@ class _TeamScreenState extends State<TeamScreen> {
   Future<List<dynamic>> fetchTeams() async {
     try {
       return await AppData.getTeams();
-    } catch (e) {
-      throw Exception('Failed to fetch teams: $e');
+    } catch (networkError) {
+      throw Exception('Failed to fetch teams: $networkError');
     }
   }
 
@@ -91,7 +92,7 @@ class _TeamScreenState extends State<TeamScreen> {
                 children: [
                   Text(
                     'Error: ${snapshot.error}',
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -99,7 +100,7 @@ class _TeamScreenState extends State<TeamScreen> {
                         futureTeams = fetchTeams();
                       });
                     },
-                    child: Text('Retry'),
+                    child: const Text('Retry'),
                   ),
                 ],
               ),
