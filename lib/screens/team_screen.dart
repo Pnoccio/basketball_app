@@ -19,7 +19,7 @@ class _TeamScreenState extends State<TeamScreen> {
     try {
       return await AppData.getTeams();
     } catch (networkError) {
-      throw Exception('Failed to fetch teams: $networkError');
+      throw Exception('Failed to get the teams: $networkError');
     }
   }
 
@@ -58,11 +58,14 @@ class _TeamScreenState extends State<TeamScreen> {
                     leading: Container(
                       margin: const EdgeInsets.all(0),
                       padding: const EdgeInsets.all(10),
-                      child: ClipOval(
-                        child: Image.asset(
-                          teamImages,
-                          height: 50,
-                          width: 50,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: ClipOval(
+                          child: Image.asset(
+                            teamImages,
+                            height: 50,
+                            width: 50,
+                          ),
                         ),
                       ),
                     ),
